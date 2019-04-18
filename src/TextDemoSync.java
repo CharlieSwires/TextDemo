@@ -45,24 +45,20 @@ import javax.swing.*;
 import org.codehaus.jackson.JsonGenerator;
 import org.codehaus.jackson.map.ObjectMapper;
 
-public class TextDemo extends JPanel implements ActionListener {
-	protected static JTextField textField;
+public class TextDemoSync extends JPanel implements ActionListener {
 	protected static JTextField textField2;
 	protected static JTextArea textArea;
 	static String nodeName = "1";
 	static JFrame frame;
 	private final static String newline = "\n";
 	static MyThread t;
-	static TextDemo td;
+	static TextDemoSync td;
 
-	public TextDemo() {
+	public TextDemoSync() {
 		super(new GridBagLayout());
 		textField2 = new JTextField(20);
 		textField2.setText("1");
 		textField2.addActionListener(this);
-
-		textField = new JTextField(20);
-		textField.addActionListener(this);
 
 		textArea = new JTextArea(5, 20);
 		textArea.setEditable(false);
@@ -74,7 +70,6 @@ public class TextDemo extends JPanel implements ActionListener {
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		add(textField2, c);
-		add(textField, c);
 
 		c.fill = GridBagConstraints.BOTH;
 		c.weightx = 1.0;
@@ -83,18 +78,7 @@ public class TextDemo extends JPanel implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent evt) {
-		if (evt.getSource()==textField){
-			textField.selectAll();
-			try {
-				sendPost();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			//Make sure the new text is visible, even if there
-			//was a selection in the text area.
-			textArea.setCaretPosition(textArea.getDocument().getLength());
-		} else if (evt.getSource()==textField2){
+		if (evt.getSource()==textField2){
 			nodeName = textField2.getText();
 			frame.setTitle(nodeName);
 		}
@@ -107,11 +91,11 @@ public class TextDemo extends JPanel implements ActionListener {
 	 */
 	private static void createAndShowGUI() {
 		//Create and set up the window.
-		frame = new JFrame("TextDemo");
+		frame = new JFrame("Sync");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		//Add contents to the window.
-		frame.add(new TextDemo());
+		frame.add(new TextDemoSync());
 
 		//Display the window.
 		frame.pack();
@@ -155,54 +139,6 @@ public class TextDemo extends JPanel implements ActionListener {
 
 	}
 
-	// HTTP POST request
-	private static void sendPost() throws Exception {
-
-		String url = "http://localhost:8080/test-web-service/central/post";
-		URL obj = new URL(url);
-		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-
-		//add reuqest header
-		con.setRequestMethod("POST");
-		con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
-		con.setRequestProperty( "Content-Type", "application/json"); 
-		con.setRequestProperty( "charset", "utf-8");
-
-		ObjectMapper mapper = new ObjectMapper();
-		//JSON from String to Object
-		Track track = new Track();
-		track.setDest(nodeName);
-		track.setText(textField.getText());
-		String outputPayload = mapper.writeValueAsString(track);
-		con.setRequestProperty( "Content-Length", Integer.toString( outputPayload.getBytes().length ));
-
-		// Send post request
-		con.setDoOutput(true);
-		DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-		wr.writeBytes(outputPayload);
-		wr.flush();
-		wr.close();
-
-		int responseCode = con.getResponseCode();
-		System.out.println("\nSending 'POST' request to URL : " + url);
-		System.out.println("Post parameters : " + outputPayload);
-		System.out.println("Response Code : " + responseCode);
-
-		BufferedReader in = new BufferedReader(
-				new InputStreamReader(con.getInputStream()));
-		String inputLine;
-		StringBuffer response = new StringBuffer();
-
-		while ((inputLine = in.readLine()) != null) {
-			response.append(inputLine);
-		}
-		in.close();
-
-		//print result
-		System.out.println(response.toString());
-
-	}
-
 	class MyThread extends Thread{
 		@SuppressWarnings("static-access")
 		@Override
@@ -222,8 +158,6 @@ public class TextDemo extends JPanel implements ActionListener {
 					}
 				}
 		        textArea.setCaretPosition(textArea.getDocument().getLength());
-		        textArea.repaint();
-				System.out.println("repaint()");
 
 				try {
 					t.sleep(1000);
@@ -243,7 +177,7 @@ public class TextDemo extends JPanel implements ActionListener {
 		//creating and showing this application's GUI.
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				td = new TextDemo();
+				td = new TextDemoSync();
 				t = td.new MyThread();
 				t.start();
 				createAndShowGUI();
