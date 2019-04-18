@@ -19,6 +19,10 @@ import javax.swing.JTextField;
 import org.codehaus.jackson.map.ObjectMapper;
 
 public class TextDemoSource extends JPanel implements ActionListener {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	protected JTextField textField;
 	protected JTextField textField2;
 	protected JTextArea textArea;

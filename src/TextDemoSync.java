@@ -46,6 +46,10 @@ import org.codehaus.jackson.JsonGenerator;
 import org.codehaus.jackson.map.ObjectMapper;
 
 public class TextDemoSync extends JPanel implements ActionListener {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	protected static JTextField textField2;
 	protected static JTextArea textArea;
 	static String nodeName = "1";
