@@ -19,9 +19,9 @@ import javax.swing.JTextField;
 import org.codehaus.jackson.map.ObjectMapper;
 
 public class TextDemoSource extends JPanel implements ActionListener {
-	protected static JTextField textField;
-	protected static JTextField textField2;
-	protected static JTextArea textArea;
+	protected JTextField textField;
+	protected JTextField textField2;
+	protected JTextArea textArea;
 	String nodeName = "1";
 	static TextDemoSource tds = null;
 	
