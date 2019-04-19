@@ -26,7 +26,7 @@ public class TextDemoSource extends JPanel implements ActionListener {
 	protected JTextField textField;
 	protected JTextField textField2;
 	protected JTextArea textArea;
-	String nodeName = "1";
+	protected String nodeName = "1";
 	static TextDemoSource tds = null;
 	
 	private final static String newline = "\n";
@@ -59,11 +59,11 @@ public class TextDemoSource extends JPanel implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent evt) {
-		if (evt.getSource()==textField){
-			textField.selectAll();
+		if (evt.getSource()==tds.textField){
+			tds.textField.selectAll();
 			Track track = new Track();
-			track.setDest(nodeName);
-			track.setText(textField.getText());
+			track.setDest(tds.nodeName);
+			track.setText(tds.textField.getText());
 			try {
 				new Thread() {
 					public void run() {
@@ -80,15 +80,14 @@ public class TextDemoSource extends JPanel implements ActionListener {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			if(textField.getText() != null){
-				textArea.append(textField2.getText()+": "+textField.getText() + newline);
+			if(tds.textField.getText() != null){
+				tds.textArea.append(tds.textField2.getText()+": "+tds.textField.getText() + newline);
 			}
 			//Make sure the new text is visible, even if there
 			//was a selection in the text area.
-			textArea.setCaretPosition(textArea.getDocument().getLength());
-			System.out.println("repaint()");
+			tds.textArea.setCaretPosition(tds.textArea.getDocument().getLength());
 		} else if (evt.getSource()==textField2){
-			nodeName = textField2.getText();
+			tds.nodeName = tds.textField2.getText();
 		}
 	}
 
@@ -98,12 +97,13 @@ public class TextDemoSource extends JPanel implements ActionListener {
 	 * event dispatch thread.
 	 */
 	private static void createAndShowGUI() {
+		tds = new TextDemoSource();
+
 		JFrame frame = new JFrame("Source");
 		//Create and set up the window.
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		//Add contents to the window.
-		tds = new TextDemoSource();
 		frame.add(tds);
 
 		//Display the window.

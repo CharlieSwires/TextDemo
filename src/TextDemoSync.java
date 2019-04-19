@@ -1,48 +1,18 @@
-/*
- * Copyright (c) 1995, 2008, Oracle and/or its affiliates. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- *   - Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- *
- *   - Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in the
- *     documentation and/or other materials provided with the distribution.
- *
- *   - Neither the name of Oracle or the names of its
- *     contributors may be used to endorse or promote products derived
- *     from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
- * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */ 
-
-
-/* TextDemo.java requires no other files. */
-
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
-import org.codehaus.jackson.JsonGenerator;
 import org.codehaus.jackson.map.ObjectMapper;
 
 public class TextDemoSync extends JPanel implements ActionListener {
@@ -50,10 +20,10 @@ public class TextDemoSync extends JPanel implements ActionListener {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	protected static JTextField textField2;
-	protected static JTextArea textArea;
-	static String nodeName = "1";
-	static JFrame frame;
+	protected JTextField textField2;
+	protected JTextArea textArea;
+	private static String nodeName = "1";
+	private JFrame frame;
 	private final static String newline = "\n";
 	static MyThread t;
 	static TextDemoSync td;
@@ -84,7 +54,7 @@ public class TextDemoSync extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent evt) {
 		if (evt.getSource()==textField2){
 			nodeName = textField2.getText();
-			frame.setTitle(nodeName);
+			td.frame.setTitle(nodeName);
 		}
 	}
 
@@ -94,16 +64,18 @@ public class TextDemoSync extends JPanel implements ActionListener {
 	 * event dispatch thread.
 	 */
 	private static void createAndShowGUI() {
+		td = new TextDemoSync();
 		//Create and set up the window.
-		frame = new JFrame("Sync");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+		td.frame = new JFrame("Sync");
+		td.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		t = td.new MyThread();
+		t.start();
 		//Add contents to the window.
-		frame.add(new TextDemoSync());
+		td.frame.add(td);
 
 		//Display the window.
-		frame.pack();
-		frame.setVisible(true);
+		td.frame.pack();
+		td.frame.setVisible(true);
 	}
 
 	// HTTP GET request
@@ -181,9 +153,6 @@ public class TextDemoSync extends JPanel implements ActionListener {
 		//creating and showing this application's GUI.
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				td = new TextDemoSync();
-				t = td.new MyThread();
-				t.start();
 				createAndShowGUI();
 			}
 		});
