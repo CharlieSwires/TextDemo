@@ -54,7 +54,7 @@ public class TextDemoSync extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent evt) {
 		if (evt.getSource()==textField2){
 			nodeName = textField2.getText();
-			td.frame.setTitle(nodeName);
+			td.frame.setTitle("Sync: "+ nodeName);
 		}
 	}
 

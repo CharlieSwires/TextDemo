@@ -27,6 +27,7 @@ public class TextDemoSource extends JPanel implements ActionListener {
 	protected JTextField textField2;
 	protected JTextArea textArea;
 	protected String nodeName = "1";
+	static JFrame frame;
 	static TextDemoSource tds = null;
 	
 	private final static String newline = "\n";
@@ -88,6 +89,8 @@ public class TextDemoSource extends JPanel implements ActionListener {
 			tds.textArea.setCaretPosition(tds.textArea.getDocument().getLength());
 		} else if (evt.getSource()==textField2){
 			tds.nodeName = tds.textField2.getText();
+			tds.frame.setTitle("Source: "+ nodeName);
+
 		}
 	}
 
@@ -99,7 +102,7 @@ public class TextDemoSource extends JPanel implements ActionListener {
 	private static void createAndShowGUI() {
 		tds = new TextDemoSource();
 
-		JFrame frame = new JFrame("Source");
+		frame = new JFrame("Source");
 		//Create and set up the window.
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
